@@ -1,27 +1,37 @@
 import os
 import io
 import base64
+import logging  # Import the logging module
 from flask import Flask, request, jsonify
 from document_processor import translate_files  # Import your translation function
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
+        logger.info('Received translation request')
+        
         # Check if a file was included in the request
         if 'file' not in request.files:
+            logger.error('No file provided in the request')
             return jsonify({'error': 'No file provided'}), 400
 
         uploaded_file = request.files['file']
 
         # Check if the file has a filename
         if uploaded_file.filename == '':
+            logger.error('No selected file in the request')
             return jsonify({'error': 'No selected file'}), 400
 
         target_lang = request.form['language']
 
         if not target_lang:
+            logger.error('Target language not provided in the request')
             return jsonify({'error': 'Target language not provided'}), 400
 
         # Read the content of the uploaded file as BytesIO-like object
@@ -41,10 +51,12 @@ def translate():
         return jsonify({'translated_content': base64_content})
 
     except FileNotFoundError as e:
+        logger.error(f'File not found: {str(e)}')
         return jsonify({'error': f'File not found: {str(e)}'}), 404
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        logger.exception('An error occurred during processing')
+        return jsonify({'error': 'An error occurred'}), 500
 
 if __name__ == '__main__':
     # Use the PORT environment variable if available (for Heroku)
