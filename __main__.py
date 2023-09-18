@@ -27,14 +27,21 @@ def translate():
         # Read the content of the uploaded file as BytesIO-like object
         file_content = io.BytesIO(uploaded_file.read())
 
+        # Construct the file path using os.path.join()
+        file_name = uploaded_file.filename
+        file_path = os.path.join('uploads', file_name)  # Adjust the path as needed
+
         # Call the translation function
-        translated_content = translate_files(file_content, uploaded_file.filename, target_lang)
+        translated_content = translate_files(file_content, file_path, target_lang)
 
         # Encode the translated content as base64
         base64_content = base64.b64encode(translated_content.read()).decode('utf-8')
 
         # Return the base64-encoded content in the response
         return jsonify({'translated_content': base64_content})
+
+    except FileNotFoundError as e:
+        return jsonify({'error': f'File not found: {str(e)}'}), 404
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
