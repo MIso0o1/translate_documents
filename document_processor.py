@@ -1,7 +1,7 @@
 import sys
 from excel_translate import translate_excel_file
 from translate_word import translate_docx
-from pdf_convert_version2 import convert_pdf_to_translated_pdf
+#from pdf_convert_version2 import convert_pdf_to_translated_pdf
 import io  
 
 def translate_files(file_content, filename, target_lang):
