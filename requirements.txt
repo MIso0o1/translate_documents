@@ -8,4 +8,3 @@ azure-functions
 requests
 beautifulsoup4==4.12.2
 flask
-comtypes
