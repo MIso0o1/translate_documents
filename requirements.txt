@@ -1,0 +1,9 @@
+beautifulsoup4==4.12.2
+docx2pdf==0.1.8
+python-docx==0.8.11
+pdf2docx==0.5.6
+openpyxl==3.1.2
+openpyxl_image_loader
+azure-functions
+requests
+beautifulsoup4==4.12.2
