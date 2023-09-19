@@ -16,6 +16,13 @@ api_keys = {
     '99356babc80c4a69234c1c234038ccba': 'miso',
 }
 
+# Authentication function to validate API keys
+def authenticate(api_key):
+    if api_key in api_keys:
+        return api_keys[api_key]
+    else:
+        return None
+    
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
