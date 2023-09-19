@@ -1,20 +1,39 @@
 import os
 import io
 import base64
-import logging  # Import the logging module
+import logging  
 from flask import Flask, request, jsonify
-from document_processor import translate_files  # Import your translation function
+from document_processor import translate_files 
+from flask_restful import Api, Resource, reqparse
 
-# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+# Define your API keys and associated usernames/roles
+api_keys = {
+    '99356babc80c4a69234c1c234038ccba': 'miso',
+}
+
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
         logger.info('Received translation request')
+
+        # Check for the API key in the request headers
+        api_key = request.headers.get('X-API-Key')
+
+        if not api_key:
+            logger.error('No API key provided in the request')
+            return jsonify({'error': 'API key missing'}), 401 
+
+        # Authenticate the API key
+        username = authenticate(api_key)
+
+        if not username:
+            logger.error('Invalid API key provided in the request')
+            return jsonify({'error': 'Invalid API key'}), 401 
         
         # Check if a file was included in the request
         if 'file' not in request.files:
@@ -39,7 +58,7 @@ def translate():
 
         # Construct the file path using os.path.join()
         file_name = uploaded_file.filename
-        file_path = os.path.join('uploads', file_name)  # Adjust the path as needed
+        file_path = os.path.join('uploads', file_name)  
 
         # Call the translation function
         translated_content = translate_files(file_content, file_path, target_lang)
@@ -62,3 +81,6 @@ if __name__ == '__main__':
     # Use the PORT environment variable if available (for Heroku)
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
+
+
