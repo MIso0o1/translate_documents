@@ -11,17 +11,15 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Define your API keys and associated usernames/roles
-api_keys = {
-    '99356babc80c4a69234c1c234038ccba': 'miso',
-}
-
 # Authentication function to validate API keys
 def authenticate(api_key):
-    if api_key in api_keys:
-        return api_keys[api_key]
+    # Replace 'API_KEY' with the actual name of your environment variable
+    heroku_api_key = os.environ.get('API_KEY')
+
+    if api_key == heroku_api_key:
+        return True
     else:
-        return None
+        return False
     
 @app.route('/translate', methods=['POST'])
 def translate():
@@ -33,14 +31,12 @@ def translate():
 
         if not api_key:
             logger.error('No API key provided in the request')
-            return jsonify({'error': 'API key missing'}), 401 
+            return jsonify({'error': 'API key missing'}), 401
 
         # Authenticate the API key
-        username = authenticate(api_key)
-
-        if not username:
+        if not authenticate(api_key):
             logger.error('Invalid API key provided in the request')
-            return jsonify({'error': 'Invalid API key'}), 401 
+            return jsonify({'error': 'Invalid API key'}), 401
         
         # Check if a file was included in the request
         if 'file' not in request.files:
