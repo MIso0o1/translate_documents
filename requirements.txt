@@ -9,3 +9,4 @@ requests
 beautifulsoup4==4.12.2
 flask
 flask_restful
+python-pptx
