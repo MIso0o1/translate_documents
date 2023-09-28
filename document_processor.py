@@ -1,6 +1,7 @@
 import sys
 from excel_translate import translate_excel_file
 from translate_word import translate_docx
+from powerpoint_translate import translate_pptx_file
 #from pdf_convert_version2 import convert_pdf_to_translated_pdf
 import io  
 
@@ -16,8 +17,8 @@ def translate_files(file_content, filename, target_lang):
         translated_bytes = io.BytesIO()
         translated_doc.save(translated_bytes)
         translated_bytes.seek(0)
-    elif filename.endswith(".pdf"):
-        translated_doc = convert_pdf_to_translated_pdf(file_content, target_lang)
+    elif filename.endswith(".pptx"):
+        translated_doc = translate_pptx_file(file_content, target_lang)
         translated_bytes = io.BytesIO()
         translated_doc.save(translated_bytes)
         translated_bytes.seek(0)    
