@@ -6,67 +6,67 @@ def apply_formatting(run, formatting):
         run.bold = True
 
 def translate_paragraph(paragraph, target_lang):
-    original_runs = paragraph.runs
-    paragraph.clear()
-
-    for run in original_runs:
+    for run in paragraph.runs:
         original_text = run.text
-
         if original_text:
-            # Translate the run text
             translated_text = translate_text_with_deepl(original_text, target_lang)
-
-            # Create a new run with the translated text and the same formatting
-            new_run = paragraph.add_run()
-            new_run.text = translated_text
-            new_run.bold = run.bold
-            new_run.italic = run.italic
-            new_run.underline = run.underline
-            new_run.font.size = run.font.size
-            new_run.font.name = run.font.name
-            new_run.font.color.rgb = run.font.color.rgb  # Preserve font color
+            run.clear()
+            run.text = translated_text
+            apply_formatting(run, run.bold)
 
 def translate_tables_in_docx(doc, target_lang):
-    # Iterate through all tables in the document
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
-                # Translate the text in the cell
-                translated_text = translate_text_with_deepl(cell.text, target_lang)
-
-                # Clear the existing content in the cell
                 for paragraph in cell.paragraphs:
-                    for run in paragraph.runs:
-                        run.clear()
+                    translate_paragraph(paragraph, target_lang)
 
-                # Add the translated text with preserved formatting
-                paragraph = cell.paragraphs[0]
-                run = paragraph.add_run()
-                run.text = translated_text
-                apply_formatting(run, cell.paragraphs[0].runs[0].bold)
+def clean_toc_entry(entry):
+    entry = entry.split('\t', 1)[-1].strip()
+    entry = entry.split('\\o', 1)[0].strip()
+    return entry
 
-def translate_docx(docx_file_path, target_lang):
-    # Open the Word document
+def translate_toc_entries(toc_entries, target_lang):
+    translated_toc_entries = []
+    for toc_entry in toc_entries:
+        if toc_entry:
+            translated_toc_entry = translate_text_with_deepl(toc_entry, target_lang)
+            translated_toc_entries.append(translated_toc_entry)
+    return translated_toc_entries
+
+def translate_docx_with_toc(docx_file_path, target_lang):
     doc = docx.Document(docx_file_path)
+    toc_entries = []
 
-    # Translate paragraphs in the document
     for paragraph in doc.paragraphs:
-        translate_paragraph(paragraph, target_lang)
+        if paragraph.style.name.startswith("toc"):
+            toc_entries.append(clean_toc_entry(paragraph.text))
 
-    # Translate tables in the document
+    translated_toc_entries = translate_toc_entries(toc_entries, target_lang)
+
+    for paragraph in doc.paragraphs:
+        if paragraph.style.name.startswith("toc"):
+            if translated_toc_entries:
+                # Replace the TOC entry with the translated version
+                paragraph.clear()
+                run = paragraph.add_run()
+                run.text = translated_toc_entries.pop(0)  # Use pop to get the next translated entry
+        else:
+            translate_paragraph(paragraph, target_lang)
+
     translate_tables_in_docx(doc, target_lang)
 
     return doc
 
 
 # Define the Word document file path
-#word_document_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.docx"
+#word_document_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver 1.docx"
 
 # Define the target language for translation
 #target_lang = "DE"  # Change this to your desired target language code
 
-# Translate the whole document and get the translated DOCX document
-#translated_doc = translate_docx(word_document_path, target_lang)
+# Translate the document, including the TOC, and get the translated DOCX document
+#translated_doc = translate_docx_with_toc(word_document_path, target_lang)
 
-# Save the translated DOCX document if needed
-#translated_doc.save("c:\\miso\\testy\\a.docx")
+# Save the updated Word document with the translated TOC
+#translated_doc.save("c:\\miso\\testy\\a_with_toc.docx")
