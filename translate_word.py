@@ -34,7 +34,7 @@ def translate_toc_entries(toc_entries, target_lang):
             translated_toc_entries.append(translated_toc_entry)
     return translated_toc_entries
 
-def translate_docx_with_toc(docx_file_path, target_lang):
+def translate_docx(docx_file_path, target_lang):
     doc = docx.Document(docx_file_path)
     toc_entries = []
 
@@ -66,7 +66,7 @@ def translate_docx_with_toc(docx_file_path, target_lang):
 #target_lang = "DE"  # Change this to your desired target language code
 
 # Translate the document, including the TOC, and get the translated DOCX document
-#translated_doc = translate_docx_with_toc(word_document_path, target_lang)
+#translated_doc = translate_docx(word_document_path, target_lang)
 
 # Save the updated Word document with the translated TOC
 #translated_doc.save("c:\\miso\\testy\\a_with_toc.docx")
