@@ -1,13 +1,13 @@
 from pptx import Presentation
 from pptx.util import Pt
-from translate_text import translate_text_with_deepl  # Import your translation function
+from translate_text import translate_text_with_deepl 
 from pptx.shapes.group import GroupShape
 
 # Function to extract text and formatting from all text boxes in a slide
 def extract_text_and_format(slide):
     text_and_format = []
     for shape in slide.shapes:
-        if shape.shape_type == GroupShape:  # Check if the shape is a grouped shape
+        if shape.shape_type == GroupShape:  
             for s in shape.shapes:
                 if hasattr(s, "text_frame"):
                     for paragraph in s.text_frame.paragraphs:

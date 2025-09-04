@@ -60,13 +60,13 @@ def translate_docx(docx_file_path, target_lang):
 
 
 # Define the Word document file path
-#word_document_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver 1.docx"
+# word_document_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.docx"
 
 # Define the target language for translation
-#target_lang = "DE"  # Change this to your desired target language code
+# target_lang = "DE"  # Change this to your desired target language code
 
 # Translate the document, including the TOC, and get the translated DOCX document
-#translated_doc = translate_docx(word_document_path, target_lang)
+# translated_doc = translate_docx(word_document_path, target_lang)
 
 # Save the updated Word document with the translated TOC
-#translated_doc.save("c:\\miso\\testy\\a_with_toc.docx")
+# translated_doc.save("c:\\miso\\testy\\a_with_toc.docx")

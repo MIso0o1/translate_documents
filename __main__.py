@@ -11,9 +11,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Authentication function to validate API keys
+
 def authenticate(api_key):
-    # Replace 'API_KEY' with the actual name of your environment variable
     heroku_api_key = os.environ.get('API_KEY')
 
     if api_key == heroku_api_key:
