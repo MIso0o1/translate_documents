@@ -38,14 +38,3 @@ def translate_excel_file(excel_file_path, target_lang):
     # Return the modified Excel workbook
     return workbook
 
-# Define the Excel file path
-#excel_file_path = "path_to_your_excel_file.xlsx"
-
-# Define the target language for translation
-#target_lang = "DE"  # Change this to your desired target language code
-
-# Translate the entire Excel file and get the modified workbook
-#translated_workbook = translate_excel_file(excel_file_path, target_lang)
-
-# Save the translated Excel workbook if needed
-# translated_workbook.save("translated_excel_file.xlsx")

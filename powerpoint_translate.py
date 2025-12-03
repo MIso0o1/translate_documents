@@ -56,12 +56,3 @@ def translate_pptx_file(input_pptx_path, target_language):
     # Return the translated presentation
     return presentation
 
-# Define the input and output file paths
-#input_pptx_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.pptx"  # Replace with the path to your input presentation
-#output_pptx_path = "c:\\miso\\testy\\a.pptx"  # Specify the output path for the translated presentation
-
-# Define the target language for translation
-#target_language = "DE"  # Change this to your desired target language code
-
-# Translate the PowerPoint presentation and save the translated version
-#translate_pptx_file(input_pptx_path, target_language, output_pptx_path)

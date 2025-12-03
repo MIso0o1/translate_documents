@@ -35,8 +35,3 @@ def translate_and_create_new_docx(docx_file_path, target_lang):
                     new_zip_ref.writestr(item, content)
     return output_filename
 
-# Example usage:
-#docx_file_path = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.docx"  # Replace with your file path
-#target_lang = "de"  # Replace with your target language code
-#translated_docx_path = translate_and_create_new_docx(docx_file_path, target_lang)
-#print(f"Translated document created at: {translated_docx_path}")

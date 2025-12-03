@@ -2,7 +2,6 @@ import sys
 from excel_translate import translate_excel_file
 from translate_word import translate_docx
 from powerpoint_translate import translate_pptx_file
-#from pdf_convert_version2 import convert_pdf_to_translated_pdf
 import io  
 
 def translate_files(file_content, filename, target_lang):
@@ -28,10 +27,3 @@ def translate_files(file_content, filename, target_lang):
 
     return translated_bytes
 
-# Define the content of the file and its filename
-#file_content = "c:\\miso\\testy\\DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.xlsx"
-#filename = "DS_Template_EN_TRM.MDGF.032.00_Tagetik for Approver.xlsx"  # Change this to your desired file name
-#target_lang = "DE"
-
-# Call the translate_files function to process the file based on its format
-#translated_content = translate_files(file_content, filename, target_lang)
