@@ -2,18 +2,20 @@
 
 ## Overview
 
-This project provides a Flask-based API for translating various document formats, including Word documents, Excel spreadsheets, and PowerPoint presentations. It leverages external translation services to process the content and returns the translated documents. The API is designed to be secure with API key authentication.
+This project provides a **FastAPI-based API** for translating various document formats, including Word documents, Excel spreadsheets, and PowerPoint presentations. It leverages external translation services to process the content **asynchronously**, significantly speeding up the translation of paragraphs and other text elements. The API is designed to be secure with API key authentication.
 
 ## Features
 
 *   **Document Translation:** Supports translation of `.docx`, `.xlsx`, and `.pptx` files.
+*   **Asynchronous Processing:** Utilizes `asyncio` and `httpx` for concurrent translation requests, leading to faster processing times.
 *   **API Key Authentication:** Ensures secure access to the translation service.
-*   **Scalable:** Designed to be deployed on platforms like Heroku.
+*   **Scalable:** Designed for efficient deployment and handling of concurrent requests.
 *   **Error Handling:** Robust error handling for file not found, missing API keys, and other issues.
 
 ## Technologies Used
 
-*   **Backend Framework:** Flask, Flask-RESTful
+*   **Backend Framework:** FastAPI, Uvicorn
+*   **Asynchronous HTTP Client:** httpx
 *   **Document Processing:** `python-docx`, `openpyxl`, `python-pptx`
 *   **Translation:** External translation service (implementation details are abstracted by `document_processor.py`)
 
@@ -49,15 +51,17 @@ To set up and run the project locally, follow these steps:
     export API_KEY="your_secret_api_key"
     ```
 
-    If deploying to Heroku, ensure this environment variable is configured there.
+    If deploying to a cloud platform, ensure this environment variable is configured there.
 
 5.  **Run the application:**
 
+    The application now uses `uvicorn`.
+
     ```bash
-    python __main__.py
+    uvicorn __main__:app --host 0.0.0.0 --port 5000 --reload
     ```
 
-    The API will run on `http://0.0.0.0:5000` by default.
+    The API will run on `http://0.0.0.0:5000` by default. You can access the interactive API documentation (Swagger UI) at `http://0.0.0.0:5000/docs`.
 
 ## API Endpoints
 
@@ -81,23 +85,22 @@ Translates an uploaded document.
         ```
     *   `400 Bad Request`: If no file or target language is provided.
     *   `401 Unauthorized`: If the API key is missing or invalid.
-    *   `404 Not Found`: If the file is not found.
     *   `500 Internal Server Error`: For other server-side errors.
 
 ## Project Structure
 
 ```
 document-translation-api/
-├── Procfile                    # Heroku Procfile for deployment
-├── requirements.txt            # Python dependencies
+├── Procfile                    # Heroku Procfile for deployment (updated for Uvicorn)
+├── requirements.txt            # Python dependencies (updated for FastAPI/Uvicorn)
 ├── __init__.py                 # Package initialization
-├── __main__.py                 # Main API entry point
-├── document_processor.py       # Core logic for document type detection and dispatching
-├── excel_translate.py          # Handles Excel (.xlsx) document translation
-├── hyperlinks.py               # Utility for handling hyperlinks in documents
-├── powerpoint_translate.py     # Handles PowerPoint (.pptx) presentation translation
-├── translate_text.py           # Core text translation utility
-└── translate_word.py           # Handles Word (.docx) document translation
+├── __main__.py                 # Main API entry point (FastAPI application)
+├── document_processor.py       # Core logic for document type detection and dispatching (async-enabled)
+├── excel_translate.py          # Handles Excel (.xlsx) document translation (async-enabled)
+├── hyperlinks.py               # Utility for handling hyperlinks in documents (async-enabled)
+├── powerpoint_translate.py     # Handles PowerPoint (.pptx) presentation translation (async-enabled)
+├── translate_text.py           # Core text translation utility (async-enabled)
+└── translate_word.py           # Handles Word (.docx) document translation (async-enabled)
 ```
 
 ## Contributing
@@ -107,4 +110,3 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 ## License
 
 This project is open-source and available under the MIT License.
-

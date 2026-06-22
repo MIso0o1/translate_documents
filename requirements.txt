@@ -6,7 +6,7 @@ openpyxl==3.1.2
 openpyxl_image_loader
 azure-functions
 requests
-beautifulsoup4==4.12.2
-flask
-flask_restful
+httpx
+fastapi
+uvicorn
 python-pptx

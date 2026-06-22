@@ -1,7 +1,8 @@
 import openpyxl
-from translate_text import translate_text_with_deepl
-import json
+import asyncio
+import httpx
 from datetime import datetime
+from translate_text import translate_text_with_deepl_async
 
 def is_numeric_or_formula(value):
     if isinstance(value, (int, float)):
@@ -10,31 +11,28 @@ def is_numeric_or_formula(value):
         return True
     return False
 
-def translate_excel_cell(cell, target_lang):
+async def translate_excel_cell_async(cell, target_lang, client):
     if cell.value and not is_numeric_or_formula(cell.value):
-        # Convert datetime objects to strings before translation
-        if isinstance(cell.value, datetime):
-            cell.value = cell.value.strftime("%Y-%m-%d %H:%M:%S")
+        value_to_translate = cell.value
+        if isinstance(value_to_translate, datetime):
+            value_to_translate = value_to_translate.strftime("%Y-%m-%d %H:%M:%S")
         
-        # Translate the cell value
-        translated_text = translate_text_with_deepl(cell.value, target_lang)
+        translated_text = await translate_text_with_deepl_async(str(value_to_translate), target_lang, client)
+        if translated_text:
+            cell.value = translated_text
 
-        # Update the cell with the translated text
-        cell.value = translated_text
-
-def translate_excel_file(excel_file_path, target_lang):
-    # Open the Excel file
+async def translate_excel_file_async(excel_file_path, target_lang):
     workbook = openpyxl.load_workbook(excel_file_path)
-
-    # Iterate through all sheets in the workbook
-    for sheet_name in workbook.sheetnames:
-        sheet = workbook[sheet_name]
-
-        # Iterate through all cells in the sheet
-        for row in sheet.iter_rows():
-            for cell in row:
-                translate_excel_cell(cell, target_lang)
-
-    # Return the modified Excel workbook
+    async with httpx.AsyncClient() as client:
+        tasks = []
+        for sheet_name in workbook.sheetnames:
+            sheet = workbook[sheet_name]
+            for row in sheet.iter_rows():
+                for cell in row:
+                    tasks.append(translate_excel_cell_async(cell, target_lang, client))
+        if tasks:
+            await asyncio.gather(*tasks)
     return workbook
 
+def translate_excel_file(excel_file_path, target_lang):
+    return asyncio.run(translate_excel_file_async(excel_file_path, target_lang))
